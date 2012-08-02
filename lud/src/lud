@@ -2,7 +2,7 @@
 # -*- mode: sh; tabstop: 4; shiftwidth: 4; softtabstop: 4; -*-
 
 #set -x
-. ${0%/*}/lud_set.env || exit 1
+. /usr/share/openudc-lud/lud_set.env || exit 1
 lud_init || exit 2
 . lud_utils.env || exit 3
 

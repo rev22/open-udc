@@ -1,3 +1,21 @@
+openudc-lud (0.1.0-mb5) unstable; urgency=low
+
+  * src/lud_genudid: select script in /usr/share/openudc-lud/
+
+ -- Michele Bini <michele.bini@gmail.com>  Thu, 02 Aug 2012 08:19:15 +0200
+
+openudc-lud (0.1.0-mb4) unstable; urgency=low
+
+  * src/lud: select script in /usr/share/openudc-lud/
+
+ -- Michele Bini <michele.bini@gmail.com>  Thu, 02 Aug 2012 08:14:07 +0200
+
+openudc-lud (0.1.0-mb3) unstable; urgency=low
+
+  * debian/copyright: Link to local copy of GPL-2 text.
+
+ -- Michele Bini <michele.bini@gmail.com>  Thu, 02 Aug 2012 08:00:24 +0200
+
 openudc-lud (0.1.0-mb2) unstable; urgency=low
 
   * Removed language extensions from lud and lud_genuid
