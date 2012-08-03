@@ -1,3 +1,9 @@
+openudc-lud (0.1.0-mb12) unstable; urgency=low
+
+  * Add dependency to Bash
+
+ -- Michele Bini <michele.bini@gmail.com>  Fri, 03 Aug 2012 16:33:03 +0200
+
 openudc-lud (0.1.0-mb11) unstable; urgency=low
 
   * Introduce LUDPATH variable to source sh files
