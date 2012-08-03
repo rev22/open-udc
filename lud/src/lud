@@ -2,9 +2,10 @@
 # -*- mode: sh; tabstop: 4; shiftwidth: 4; softtabstop: 4; -*-
 
 #set -x
-. /usr/share/openudc-lud/lud_set.env || exit 1
+LUDPATH="/usr/share/openudc-lud"
+. "$LUDPATH"/lud_set.env || exit 1
 lud_init || exit 2
-. lud_utils.env || exit 3
+. "$LUDPATH"/lud_utils.env || exit 3
 
 while true ; do
 	lud_utils_chooseinlist "Please choose what to do ?" 1 \
@@ -30,7 +31,7 @@ while true ; do
 		;;
 	  3)
 		
-		. lud_generator.env
+		. "$LUDPATH"/lud_generator.env
 		lud_generator_udid
 		read -t 5
 		;;
