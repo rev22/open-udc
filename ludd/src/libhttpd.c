@@ -55,10 +55,6 @@
 #include <unistd.h>
 #include <stdarg.h>
 
-#ifdef HAVE_OSRELDATE_H
-#include <osreldate.h>
-#endif /* HAVE_OSRELDATE_H */
-
 #ifdef HAVE_DIRENT_H
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
@@ -80,7 +76,9 @@
 #define MAXPATHLEN 4096
 #endif
 
+#ifdef AUTH_FILE
 extern char* crypt( const char* key, const char* setting );
+#endif /* AUTH_FILE */
 
 #include "libhttpd.h"
 #include "mmc.h"
@@ -128,7 +126,7 @@ static void check_options( void );
 static void free_httpd_server( httpd_server* hs );
 static int initialize_listen_socket( httpd_sockaddr* saP );
 static void add_response( httpd_conn* hc, char* str );
-static void send_mime( httpd_conn* hc, int status, char* title, char* encodings, char* extraheads, char* type, off_t length, time_t mod );
+void send_mime( httpd_conn* hc, int status, char* title, char* encodings, char* extraheads, char* type, off_t length, time_t mod );
 static void send_response( httpd_conn* hc, int status, char* title, char* extraheads, char* form, char* arg );
 static void send_response_tail( httpd_conn* hc );
 static void defang( char* str, char* dfstr, int dfsize );
@@ -153,7 +151,7 @@ static void init_mime( void );
 static void figure_mime( httpd_conn* hc );
 #ifdef CGI_TIMELIMIT
 static void cgi_kill2( ClientData client_data, struct timeval* nowP );
-static void cgi_kill( ClientData client_data, struct timeval* nowP );
+void cgi_kill( ClientData client_data, struct timeval* nowP );
 #endif /* CGI_TIMELIMIT */
 #ifdef GENERATE_INDEXES
 static int ls( httpd_conn* hc );
@@ -184,7 +182,7 @@ static long long atoll( const char* str );
 ** response definitely gets written.  So, it checks this variable.  A bit
 ** of a hack but it seems to do the right thing.
 */
-static int sub_process = 0;
+int sub_process = 0;
 
 
 static void
@@ -436,45 +434,44 @@ httpd_unlisten( httpd_server* hs )
 #define ERROR_FORM(a,b) a
 #endif /* EXPLICIT_ERROR_PAGES */
 
+char* ok200title = "OK";
+char* ok206title = "Partial Content";
 
-static char* ok200title = "OK";
-static char* ok206title = "Partial Content";
+char* err302title = "Found";
+char* err302form = "The actual URL is '%.80s'.\n";
 
-static char* err302title = "Found";
-static char* err302form = "The actual URL is '%.80s'.\n";
-
-static char* err304title = "Not Modified";
+char* err304title = "Not Modified";
 
 char* httpd_err400title = "Bad Request";
 char* httpd_err400form =
 	"Your request has bad syntax or is inherently impossible to satisfy.\n";
 
 #ifdef AUTH_FILE
-static char* err401title = "Unauthorized";
-static char* err401form =
+char* err401title = "Unauthorized";
+char* err401form =
 	"Authorization required for the URL '%.80s'.\n";
 #endif /* AUTH_FILE */
 
-static char* err403title = "Forbidden";
+char* err403title = "Forbidden";
 #ifndef EXPLICIT_ERROR_PAGES
-static char* err403form =
+char* err403form =
 	"You do not have permission to get URL '%.80s' from this server.\n";
 #endif /* !EXPLICIT_ERROR_PAGES */
 
-static char* err404title = "Not Found";
-static char* err404form =
+char* err404title = "Not Found";
+char* err404form =
 	"The requested URL '%.80s' was not found on this server.\n";
 
 char* httpd_err408title = "Request Timeout";
 char* httpd_err408form =
 	"No request appeared within a reasonable time period.\n";
 
-static char* err500title = "Internal Error";
-static char* err500form =
+char* err500title = "Internal Error";
+char* err500form =
 	"There was an unusual problem serving the requested URL '%.80s'.\n";
 
-static char* err501title = "Not Implemented";
-static char* err501form =
+char* err501title = "Not Implemented";
+char* err501form =
 	"The requested method '%.80s' is not implemented by this server.\n";
 
 char* httpd_err503title = "Service Temporarily Overloaded";
@@ -542,7 +539,7 @@ httpd_clear_ndelay( int fd )
 	}
 
 
-static void
+void
 send_mime( httpd_conn* hc, int status, char* title, char* encodings, char* extraheads, char* type, off_t length, time_t mod )
 	{
 	time_t now, expires;
@@ -2323,7 +2320,7 @@ cgi_kill2( ClientData client_data, struct timeval* nowP )
 		syslog( LOG_ERR, "hard-killed CGI process %d", pid );
 	}
 
-static void
+void
 cgi_kill( ClientData client_data, struct timeval* nowP )
 	{
 	pid_t pid;

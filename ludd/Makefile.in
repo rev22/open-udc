@@ -1,6 +1,7 @@
 # Makefile.in for ludd
 #
 # Copyright © 1995,1998 by Jef Poskanzer <jef@mail.acme.com>.
+# Copyright © 2012 by Jean-Jacques Brucker <open-udc@googlegroups.com>.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -36,7 +37,7 @@ BINDIR = @sbindir@
 MANDIR = @datarootdir@/man
 
 HOMEDIR = @localstatedir@/.ludd
-# Pathname of directory to install the CGI programs.
+# Pathname of directory available trough internet.
 WEBDIR = pub
 
 # CONFIGURE: Directory for CGI executables.
@@ -71,7 +72,8 @@ subdirs:
 
 
 install:	installsubdirs
-	useradd -r -c "system user for ludd" -d "$(HOMEDIR)" -s /sbin/nologin .ludd
+	useradd -r -c "system user for ludd" -d "$(HOMEDIR)" -s /sbin/nologin .ludd || true
+	chown -R .ludd "$(HOMEDIR)"
 
 installsubdirs:
 	for i in $(SUBDIRS) ; do ( \
@@ -84,6 +86,7 @@ installsubdirs:
 
 uninstall:	uninstallsubdirs
 	userdel .ludd
+	rm -rf "$(HOMEDIR)"
 
 uninstallsubdirs:
 	for i in $(SUBDIRS) ; do ( \

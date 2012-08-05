@@ -91,7 +91,7 @@ Request for Comments:                                      Open-UDC Team
   An udc-bill is a few single and undivisible data which indicate a value.
 
   Udc-bills are data without any mechanism of authenticity and should
-  not be directly exchange. "copying is not theft".
+  not be directly exchanged; "copying is not theft".
 
   Udc-bills contain:
     - A number to define the value
@@ -106,19 +106,19 @@ Request for Comments:                                      Open-UDC Team
   signatures. And that is the main mechanism of udc-unit authenticity.
   The second one being provided by the network.
 
-3.3.1 make transaction
+3.3.1 Transactions
 
     To make a transaction, ie. to pay or make a donation, people first
     need to own some udc-unit. Which means you hold the secret (the
     private key) associated to the last pubkey in the signature chain.
 
-    Then transaction is done by :
+    Then transaction is done by:
     1- Digitally signing (with the private key associated to previous
        public key) the digest of this udc-unit concatenated with some
        meta-data containing the public key of the next owner.
     2- Adding this signature to the beginning of the udc-unit.
 
-    A payee should verify the signatures to verify the chain of
+    The payee should verify the signatures to verify the chain of
     ownership.
 
 3.3.2 differences compared to BitCoin
@@ -140,7 +140,7 @@ Request for Comments:                                      Open-UDC Team
     the entire network.
 
     We believe that the most important concepts to provide equity is not
-    the hierarchized (or not) structure of the third party. But its
+    the hierarchical (or not) structure of the third party. But its
     level of, human-based, democracy and transparency.
 
     That kind of democracy and transparency have been especially met
@@ -152,7 +152,7 @@ Request for Comments:                                      Open-UDC Team
     their own sub-chatroom as the number of members or transactions
     inside the first chatroom increase.
 
-    Growing up, the third party should be split into a tree of node.
+    Growing up, the third party should be split into a tree of nodes.
 
     Notes:
 
@@ -186,7 +186,7 @@ Request for Comments:                                      Open-UDC Team
       missing certificates to reach one of their common denominator
       which are, ultimately, the accountants of the root node.
 
-    As KeyID collision may occurs, the udc-unit need, to be check and
+    As KeyID collision may occur, the udc-unit need, to be checked and
     replayed by the network, to contain the "udid1" or a "udnode1" of
     the buyer in the signing chain.
 
@@ -198,33 +198,33 @@ Request for Comments:                                      Open-UDC Team
     - possibly be shortened.
     - be replayed and pay taxes if there are some in the crossed nodes.
     - check it has not been double spent and identify the bad guy if
-      has been.
+      it has been.
 
     The offline parameters (maximum time since a connected transaction,
     maximum following offline transactions, multiple recipient...)
     SHOULD be the same for all udc-units of a given currency, and MAY be
     democratically calculated.
 
-    By the way, an offline vendor is free to decide its parameters to
-    suspect or accept the money given to him. But if they differ from
-    the ones recommended by the community, the vendor SHOULD prevent
-    the buyer of its parameters before the transaction (eg: like
-    some vendors prevented that they didn't accept check).
+    By the way, an offline vendor is free to decide their parameters
+    to suspect or accept the money given to him. But if they differ
+    from the ones recommended by the community, the vendor SHOULD
+    warn the buyer of its parameters before the transaction (eg: like
+    some vendors warn that they didn't accept check).
 
-    Note about OpenPGP KeyID collision : 2^64 possible OpenPGP KeyID,
+    Note about OpenPGP KeyID collisions: 2^64 possible OpenPGP KeyID,
     today there are about 2^33 human which may use about 2^6 key in
     there life.
 
 3.3.4 beginning the chain
 
     Each time money is created, a list of key IDs and a list of users
-    who belong those keys is published. Those lists should be sign by at
-    least the majority of the user in the previous list.
+    who belong those keys is published.  Those lists should be signed
+    by at least the majority of the user in the previous list.
 
     Then each user should create the part of money which is reserved for
-    him, i.e. signing first transaction with its own key.
+    them, i.e. signing first transaction with its own key.
 
-    Key ID collision are not allowed for this keys.
+    Key ID collision are not allowed for these keys.
 
 3.3.5 timestamp in the chain
 
@@ -256,7 +256,7 @@ Request for Comments:                                      Open-UDC Team
 
     A transaction can not be canceled.
 
-    A transaction is valid or is not.
+    A transaction is either valid or invalid.
 
     If the transaction data in the signature chain are incorrect, the
     transaction is invalid and :
@@ -268,17 +268,17 @@ Request for Comments:                                      Open-UDC Team
 
     If the transaction is valid but, as a recipient, you don't want the
     money (to own the udc-unit(s)), you have to make a new transaction
-    back, i.e. to sign the key before your in the udc-unit.
+    back, i.e. to sign the key before yours in the udc-unit.
 
 
 4.== udc-unit header description ==
 
 4.1= currency code =
 
-    The currency code should be conformed to the ISO 4217 Currency Code
+    The currency code should conform to the ISO 4217 Currency Code
     List.
 
-    There are still a lot of place in this list to create new
+    There is still a lot of place in this list to create new
     3-characters currency codes.
 
     By the way, the currency code in udc-unit (version 1) MAY have a
@@ -286,7 +286,7 @@ Request for Comments:                                      Open-UDC Team
 
 4.2= version =
 
-    Adding a version information inside udc-units give them the ability
+    Adding a version information inside udc-units gives them the ability
     to evolve in the future.
 
     This RFC describe only the version 1 of udc-units.
@@ -301,9 +301,9 @@ Request for Comments:                                      Open-UDC Team
 
 5.1= serial number =
 
-    The serial number of a udc-bill is composed of 3 information :
+    The serial number of a udc-bill is composed of 3 components:
 
-    - Its value, which follow the convention mainly adopted
+    - Its value, which follows the convention mainly adopted
       worldwide: 1,2,5,10,20,50,100,200,500,1000 ...
 
     - A counter which increases each time a set of money is created.
@@ -347,7 +347,7 @@ Request for Comments:                                      Open-UDC Team
     it spreads the quantity and distribution about monetary creation and
     so permit to detect the legitimacy of each udc-bills.
 
-    The creation information inside udc-bill are :
+    The creation information inside udc-bill is :
     1- The number of individuals recorded for the created set.
     2- The Universal Dividend and its distribution among the
        possible udc-bill values for the created set.
@@ -377,8 +377,8 @@ Request for Comments:                                      Open-UDC Team
   This is also the recommended binary format to use through the network
   or in storage systems (files, databases, ...).
 
-  All integer values stored in more that 1 octet MUST use the little
-  Indians.
+  All integer values stored in more that 1 octet MUST use encoded
+  little-endian.
 
   All dates are formatted as number of seconds since 00:00:00 UTC on
   Thursday, 1 January 1970.
@@ -483,12 +483,12 @@ Request for Comments:                                      Open-UDC Team
     As it has been mentioned, offline udc-units MUST be published
     as soon as possible.
 
-    If not, fraud detection will become harder, which mean fraud will
+    If not, fraud detection will become harder, which means fraud will
     become easier.
 
 9.2= signing chain initialization =
 
-    The initialization of the signing chain required all attention
+    The initialization of the signing chain requires all attention
     because it holds the crucial security part during offline
     transaction.
 

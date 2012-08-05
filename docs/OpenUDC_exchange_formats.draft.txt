@@ -27,14 +27,14 @@ Request for Comments:                                      Open-UDC Team
 1.== Introduction ==
 
   The OpenUDC project aims to provide a open, democratic and secure
-  monetary system, compatible with universal dividend.
+  monetary system, compatible with the Universal Dividend.
 
-  This document describe the MIME-types used in to described the
-  different datas which need are exchanged in OpenUDC implementations.
+  This document describes the MIME-types used in to described the
+  different data which are exchanged in OpenUDC implementations.
 
-  Only the Content-Type field is used, which permit more flexible uses:
-  It make it compatible with almost all multipart media type as defined
-  in section 5.1 of [RFC2046].
+  Only the Content-Type field is used, which permits more flexible uses:
+  This makes it compatible with almost all multipart media type as
+  defined in section 5.1 of [RFC2046].
   But
 
   OpenPGP standard [RFC4880].
@@ -59,12 +59,12 @@ Request for Comments:                                      Open-UDC Team
   specified by the protocol HTTP/1.1, cf. [rfc2616].
 
   Validation Nodes MUST manage the MIME types defined in this document
-  (cf sections ..) and send them them in the "Content-Type" parameter.
+  (cf sections ..) and specify them in the "Content-Type" parameter.
 
 4.== Tree Structure of Validation Nodes
 
-  As each Nodes act as an HTTP server, Node Ressources MUST be
-  available trough such kind of URL :
+  As each Nodes act as an HTTP server, Node Resources MUST be
+  available through such kind of URL :
 
     * http://NodeHostame[:port]/[Root/]...
   or
@@ -131,7 +131,7 @@ http[s]://Node[:port]/[Root/]...
 5.4= Formats encapsulation =
 
 This document describe the MIME-types used in to described the
-  different datas which need are exchanged in OpenUDC implementations.
+  different datas which are exchanged in OpenUDC implementations.
 cf: [RFC2046] : http://www.bortzmeyer.org/2046.html
 [RFC3156] : http://www.ietf.org/rfc/rfc3156.txt
 MIME types used by OpenUDC Nodes and Clients

@@ -61,38 +61,38 @@ Request for Comments:                                      Open-UDC Team
 
 3.== Terminology ==
 
-  An "udc-client" is anything that follow the Open-UDC money description
+  An "udc-client" is anything that follows the Open-UDC money description
   ([RFCxxxx]) to check validity of money units and manipulate them.
 
   An "udc-agent" is a valid udc-client which follows this specification
   ([RFCxxxx]) to communicate with other udc-agent.
 
-  An "udc-unit" are units of money as described in the Open-UDC money
+  An "udc-unit" is a unit of money as described in the Open-UDC money
   description ([RFCxxxx]).
 
-  A node refer to an entity composed from 1 to multiple udc-agent, which
-  was accepted somewhere in a hierarchized nodes structure.
+  A node refers to an entity composed from 1 to multiple udc-agents, which
+  was accepted somewhere in a hierarchical nodes structure.
 
   An udc-agent has to be accepted in at least one node to begin
   for receiving and sending money.
 
   Once an udc-agent has been accepted as a member of a node, it could
-  become himself, or with some other members of the node, a children
+  become themselves, or with some other members of the node, a children
   node.
 
-  It is the reason why we use sometimes the term "node", to designate an
+  This is the reason why we use sometimes the term "node", to designate an
   udc-agent as soon as it has been accepted as a member of a node.
 
   The "root node" could be also called the "main node", or the
   "top-level node", but we prefer the "root node" designation.
 
-  A individual is a living human, regardless it's age, sex, et cetera.
+  A individual is a living human, regardless their age, sex, etc.
 
 4.== Global description ==
 
   In a open-UDC architecture, the root node is itself an entity of
   multiple nodes with multiple individuals behind, and anyone SHOULD be
-  able to see what happen in this node.
+  able to see what happens in any node.
 
   A node MAY be associated with one or more individuals. But an
   individual MUST be associated with only one node in the entire node
@@ -102,16 +102,16 @@ Request for Comments:                                      Open-UDC Team
   transaction to its fund.
 
   By definition an udc-agent which has been accepted in a node is a
-  member of 2 filiated nodes : this node and itself.
+  member of 2 associated nodes : this node and itself.
 
   But the udc-agent MAY be a member of any other node, and SHOULD watch
-  almost all node upon him in the hierarchized nodes structure.
+  almost all nodes over him in the hierarchized nodes structure.
 
 5.== Node Description ==
 
 5.1= Nodes URI  (Uniform Resource Identifier) =
 
-  Each Node have a unique identifier which look like DNS name :
+  Each Node has a unique identifier which look like DNS name :
     - uni         is the root node of the currency "uni"
     - uni.oy      could be the node used by almost all Faroe Islands
           habitants.
@@ -140,7 +140,7 @@ Request for Comments:                                      Open-UDC Team
 5.3= Node Type =
 
  * Accountants are the ones which verify and store all transactions in
-   the node. Each accountants are coequal, and
+   the node.  All the accountants are coequal, and:
    - MUST store the entire money repartition of the node.
    - MUST store all node parameters.
    - MUST be present with high availability on all communication
@@ -148,20 +148,20 @@ Request for Comments:                                      Open-UDC Team
    - MUST be able to verify and validate (eg. sign) quickly any
       transactions in the node.
    - A minimal number or proportion of accountants MUST validate (sign)
-     each transaction. That is a parameters which should be voted by the
-     members of a node.
+      each transaction. That is a parameters which should be voted on
+      by the members of a node.
 
  * Users are typically the type used by almost everyone to declare or
    confirm transactions, and to vote for the different parameters of the
    node.
 
-  Any node user can ask to be an accountant if it match accountant
+  Any node user can ask to be an accountant if it meets accountant
   requirements, its acceptance SHOULD depend on a node vote.
 
-  Accountants and Users are the members of a node. As validate member of
-  a node, they are able to create their own children node, but it is not
-  recommended if they don't match the accountant requirements AND don't
-  have replicants.
+  Accountants and Users are the members of a node. As valid members of
+  a node, they are able to create their own children nodes, but this
+  is not recommended if they don't match the accountant requirements
+  AND don't have clones.
 
  * Fund
 
@@ -173,9 +173,9 @@ Request for Comments:                                      Open-UDC Team
 
   == Node Aliases ==
 
-   The "\" characters MUST be used only to identify several accountant of
+   The "\" characters MUST be used only to identify several accountants of
   a children node. For example names fra\Paris and fra\05 on a channel
-  indicate that node "Paris" and "05" are both accountant of the
+  indicate that node "Paris" and "05" are both accountants of the
   children node fra.
 
   == Node parameters ==
@@ -195,10 +195,11 @@ Request for Comments:                                      Open-UDC Team
   send daily digest to a mailing list.
 
   A node SHOULD use only one way to broadcast transactions during a
-  period, they other ways exist for backup only (if first ways broke).
+  period, the other ways exist for backup only (if the first way is
+  broken).
 
-  The backup IRC channels and XMPP salons MUST indicate the one which
-  is active and used to broadcast transactions. That could be done using
+  The backup IRC channels and XMPP salons MUST indicate the ones which
+  are active and used to broadcast transactions. That could be done using
   the topic of the channels or salons.
 
   Name of the IRC channel or XMPP salon SHOULD be equal to its node URI,
@@ -223,13 +224,13 @@ IRC channel or XMMP salons SHOULD be moderated and structured like this :
   anyone to any udc-agent :
 
  - HELP
-    This command MUST show and explain other command supported by the
+    This command MUST show and explain other commands supported by the
     udc-agent.
  - INFO
     This command SHOULD indicate the version of the open-udc software,
     the nodes in which it has been accepted, and its public keys or certificates.
  - SUBSCRIBE
-    This command SHOULD permit to a member of a node for entering one of its node.
+    This command SHOULD allow a member of a node to enter one of its nodes.
  - WHEREIS
     The udc-agent MUST answer EVERYTHING he know about the unit(s) of
     money given as parameter(s).
@@ -238,29 +239,30 @@ IRC channel or XMMP salons SHOULD be moderated and structured like this :
  - GETPARAMETER
 
  - SEND
-      This Command permit to send money It implies the use of the DECLARE command.
+    This Command permits to send money; it implies the use of the
+    DECLARE command.
 
 _Node Command, usable inside the broadcast channels.
 
  - ASKVOTE
       This Command is send by any individual who wants to change a node
-      parameter, introduce a new member in the node, or wants its
+      parameter, introduce a new member in the node, or who wants its
       udc-agent to hold the accountant status.
  - VOTE
-      This Command respond to an ASKVOTE command.
+      This Command responds to an ASKVOTE command.
  - UPDATE
       This Command is sent by accountants which have been disconnected
-      to indicate it have finished to retrieve the transactions it lost,
+      to indicate it has finished to retrieve the transactions it lost,
       and so is able to regain its accountant status.
  - DECLARE
       This Command is send by a node to declare a transaction. (money
       have been sent directly from somewhere to somewhere else)
  - CONFIRM
-      This Command respond to a DECLARE command
+      This Command responds to a DECLARE command
 
  - EXCHANGE
       This Command is used to exchange money units (a unit with big
-      value to multiple money units with less value).
+      value that multiplies money units with less value).
 
  - RESET
 
@@ -272,7 +274,7 @@ _Node Command, usable inside the broadcast channels.
 
  - HELP (mandatory)
 
-  Without any argument it MUST list the available command accepted by a
+  Without any argument it MUST list the available commands accepted by a
   bot. In other case it must the describe the command passed as its
   first argument.
 
