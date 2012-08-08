@@ -20,29 +20,29 @@ Request for Comments:                                      Open-UDC Team
     3.1 header/footer ...............................................
     3.2 bills .......................................................
     3.3 signing chain ...............................................
-    3.3.1 make transaction ......................................
-    3.3.2 differences compared to BitCoin .......................
-    3.3.3 offline transactions ..................................
-    3.3.4 beginning the chain ...................................
-    3.3.5 timestamp in the chain ................................
-    3.3.6 cancel a transaction ..................................
+	3.3.1 make transaction ......................................
+	3.3.2 differences compared to BitCoin .......................
+	3.3.3 offline transactions ..................................
+	3.3.4 beginning the chain ...................................
+	3.3.5 timestamp in the chain ................................
+	3.3.6 cancel a transaction ..................................
  4. udc-unit header description .....................................
     4.1 currency code ...............................................
     4.2 version .....................................................
-    4.3 number of udc-bills ........................................
+    4.3 number of udc-bills .........................................
  5. udc-bill description ............................................
     5.1 serial number ...............................................
     5.2 coding the value ............................................
-    5.3 creation information .....................................
+    5.3 creation information ........................................
  6. udc-unit signing chain description ..............................
     6.1 Signature types .............................................
-    6.1.1 Digests ...............................................
-    6.1.2 Asymmetric cryptographic keys .........................
+	6.1.1 Digests ...............................................
+	6.1.2 Asymmetric cryptographic keys .........................
  7. udc-unit binary format ..........................................
     7.1 header ......................................................
     7.2 bills .......................................................
     7.3 signing chain ...............................................
- 8. udc-unit ASCII format ............................................
+ 8. udc-unit ASCII format ...........................................
  9. Security concerns ...............................................
     9.1 offline transactions ........................................
     9.2 init chain signature ........................................
@@ -91,7 +91,7 @@ Request for Comments:                                      Open-UDC Team
   An udc-bill is a few single and undivisible data which indicate a value.
 
   Udc-bills are data without any mechanism of authenticity and should
-  not be directly exchanged; "copying is not theft".
+  not be directly exchanged: "copying is not theft".
 
   Udc-bills contain:
     - A number to define the value
@@ -186,7 +186,7 @@ Request for Comments:                                      Open-UDC Team
       missing certificates to reach one of their common denominator
       which are, ultimately, the accountants of the root node.
 
-    As KeyID collision may occur, the udc-unit need, to be checked and
+    As KeyID collisions may occur, the udc-unit needs to be checked and
     replayed by the network, to contain the "udid1" or a "udnode1" of
     the buyer in the signing chain.
 
@@ -245,7 +245,7 @@ Request for Comments:                                      Open-UDC Team
 
     If a buyer has signed a date too far in the future, as a vendor
     you can :
-    - give his money back more far in the future (... and ping
+    - give his money back more further the future (... and ping
       pong until offline transaction maximum number is reached
       ...  =>  bad idea).
     - ask him to come back getting the things he has paid after
@@ -317,7 +317,7 @@ Request for Comments:                                      Open-UDC Team
 5.2= coding the value =
 
     As the value of a udc unit follow the 1,2,5,10,20... sequence, it
-    may be coded up to the value 5*10^63 with only one octet and to the
+    may be coded up to the value 5*10^63 with only one byte and to the
     value 5*10^15 with only 6 bits :
 
     +  -  -  -  -  -  -  -  +
@@ -377,7 +377,7 @@ Request for Comments:                                      Open-UDC Team
   This is also the recommended binary format to use through the network
   or in storage systems (files, databases, ...).
 
-  All integer values stored in more that 1 octet MUST use encoded
+  All integer values stored in more that 1 octet MUST be encoded
   little-endian.
 
   All dates are formatted as number of seconds since 00:00:00 UTC on
@@ -397,24 +397,24 @@ Request for Comments:                                      Open-UDC Team
     Detail:
 
     bits 0 to 39 (currency code):
-    3 to 5 NULL-padded ASCII chars to identify a currency
-    (cf. section 3.1).
+	3 to 5 NULL-padded ASCII chars to identify a currency
+	(cf. section 3.1).
 
     bits 40 to 43 (Version):
-    Version bits. This document only describe version 1.
+	Version bits. This document only describes version 1.
 
     bits 44 (Position):
-    This bit define the location of udc-bills:
-        - if 0 the udc-bills are following
-        - if 1 the udc-bills are previous
-    This may be useful to indicate the Number of udc-bill in both
-    extremities in order to read them forward or backward.
+	This bit defines the location of udc-bills:
+	    - if 0 the udc-bills are following
+	    - if 1 the udc-bills are previous
+	This may be useful to indicate the Number of udc-bills in both
+	extremities in order to read them forward or backward.
 
     bits 45 to 47 (Unused):
-    Reserved for future use.
+	Reserved for future use.
 
     bits 48 to 63 (NbGlued):
-    uint16_t. Define the number of udc-bill "glued" and signed once.
+	uint16_t. Define the number of udc-bill "glued" and signed once.
 
 
 7.2= udc-bill =
@@ -427,42 +427,42 @@ Request for Comments:                                      Open-UDC Team
   +-------+-------+-------+--------+--------+-------+-------+-------+
   ...they are 16*3 possible bills, factors are encoded on quartets...
   +-------+-------+-------+--------+--------+-------+-------+-------+
-        ... (so 16*3*4 = 192 bits)           ...; h ; p ; q ; n |
+	    ... (so 16*3*4 = 192 bits)           ...; h ; p ; q ; n |
   +-------+-------+-------+--------+--------+-------+-------+-------+
   | Magic |         Number of Individuals           |  CRC 16 (BSD) |
   +-------+-------+-------+--------+--------+-------+-------+-------+
 
-    Only the first 8 octets (64 bits) are useful to identify a unique
+    Only the first 8 bytes (64 bits) are useful to identify a unique
     udc-bill.
 
     Detail:
 
     bits 0 to 5 (Value):
-    Value of the udc-unit. (cf. section 5.2).
+	Value of the udc-unit. (cf. section 5.2).
 
     bits 6 to 19 (Time counter):
-    14 bits, unsigned. MUST be increase each time a set of money is
-     created (usually each month).
+	14 bits, unsigned. MUST be increase each time a set of money is
+	 created (usually each month).
 
     bits 20 to 63 (number):
-    44 bits, unsigned. The bill number of this value in the created
-    set.
+	44 bits, unsigned. The bill number of this value in the created
+	set.
 
     bits 64 to 255 (Universal Dividend):
-    The amount of each udc-bill created per individual for the
-    given period:
+	The amount of each udc-bill created per individual for the
+	given period:
       bits 64 to 67 : the amount of udc-bill of value 5*10^15 created in
-                      this set
+			this set
       (...)
       bits 252 to 255 : the amount of udc-bill with value 1*10^0 created in
-                        this set
+			this set
 
     bits 256 to 263 (Magic):
-    This octet may be use as a magic number. Why not 42 ?
+	This byte may be use as a magic number. Why not 42?
 
     bits 264 to 303 (Individual Number):
-    40 bits, unsigned. The number of registered unique individual for
-    the given period.
+	40 bits, unsigned. The number of registered unique individual for
+	the given period.
 
     bits 304 to 319 : BSD compatible CRC of the 304 previous bits.
 
