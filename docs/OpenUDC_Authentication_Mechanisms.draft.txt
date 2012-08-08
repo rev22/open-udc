@@ -34,7 +34,7 @@ Request for Comments:                                      Open-UDC Team
   This document describe the authentication mechanisms used in the
   OpenUDC implementations.
 
-  This authentication mechanisms use and are compliant with the OpenPGP
+  These authentication mechanisms use and are compliant with the OpenPGP
   standard [RFC4880].
 
 2.== Conventions Used in This Document ==
