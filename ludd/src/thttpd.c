@@ -144,6 +144,8 @@ int stats_simultaneous;
 
 static volatile int got_hup, got_usr1, got_bus, watchdog_flag;
 
+/* The main gpgme context */
+gpgme_ctx_t gpgctx;
 
 /* Forwards. */
 static void parse_args( int argc, char** argv );
@@ -260,7 +262,6 @@ handle_hup( int sig )
 	errno = oerrno;
 	}
 
-
 /* SIGUSR1 says to exit as soon as all current connections are done. */
 static void
 handle_usr1( int sig )
@@ -372,11 +373,9 @@ re_open_logfile( void )
 		}
 	}
 
-
 int
 main( int argc, char** argv )
 	{
-	char* cp;
 	struct passwd* pwd;
 	uid_t uid = 32767;
 	gid_t gid = 32767;
@@ -392,19 +391,16 @@ main( int argc, char** argv )
 	struct timeval tv;
 	struct stat stf;
 
-	gpgme_ctx_t gpgctx;
 	gpgme_key_t gpgkey;
 	gpgme_error_t gpgerr;
 	gpgme_engine_info_t enginfo;
 
-	argv0 = argv[0];
-
-	cp = strrchr( argv0, '/' );
-	if ( cp != (char*) 0 )
-		++cp;
+	argv0 = strrchr( argv[0], '/' );
+	if ( argv0 != (char*) 0 )
+		++argv0;
 	else
-		cp = argv0;
-	openlog( cp, LOG_NDELAY|LOG_PID, LOG_FACILITY );
+		argv0 = argv[0];
+	openlog( argv0, LOG_NDELAY|LOG_PID, LOG_FACILITY );
 
 	/* Handle command-line arguments. */
 	parse_args( argc, argv );
@@ -442,6 +438,8 @@ main( int argc, char** argv )
 		uid = pwd->pw_uid;
 		gid = pwd->pw_gid;
 		}
+	else
+		pwd = getpwuid(getuid());
 
 	/* Log file. */
 	if ( logfile != (char*) 0 )
@@ -483,17 +481,31 @@ main( int argc, char** argv )
 	else
 		logfp = (FILE*) 0;
 
-	/* Switch directories if requested. */
-	if ( dir != (char*) 0 )
-		{
-		if ( chdir( dir ) < 0 )
-			{
-			syslog( LOG_CRIT, "chdir - %m" );
-			err(1, "chdir" );
-			}
+	/* Switch directory : the one in parameters, or the $HOME of the user(setuid) if root, or $HOME/.ludd  */
+	if ( dir == (char*) 0 )
+		if ( getuid() == 0 ) 
+			dir=(pwd->pw_dir?pwd->pw_dir:".");
+		else {
+			dir=NEW(char,strlen(pwd->pw_dir)+3+strlen(argv0));
+			strcpy(dir,pwd->pw_dir);
+			strcat(dir,"/.");
+			strcat(dir,argv0);
 		}
-	else
-		dir="." ;
+	if ( do_init ) {
+		fprintf(stdout,"%s will create its stuff to run in %s, press a key to confirm (or Ctrl-C to exit) ...",argv0,dir);
+		getchar();
+		if ( chdir(dir) ) {
+			if ( mkdir(dir,0755) || (getuid()==0 ? chown(dir,uid,gid) : (0) ) )
+				err(1,"creating %s dir",dir);
+		} else
+			chdir("..");
+	}
+
+	if ( chdir( dir ) < 0 )
+		{
+		syslog( LOG_CRIT, "chdir - %m" );
+		err(1, "Exiting (forget -init ?) - chdir %s",dir );
+		}
 	
 	/* if we are root make sure that directory is owned by the specified user */
 	if ( getuid() == 0 )
@@ -521,8 +533,7 @@ main( int argc, char** argv )
 
 	if ( do_init )
 		{
-		fprintf(stdout,"%s will create its stuff to run in %s, press a key to confirm (or Ctrl-C to exit) ...",argv[0],cwd);
-		getchar();
+		/* In this case just create and chdir in public directory */
 		if ( chdir(WEB_DIR) ) 
 			if ( mkdir(WEB_DIR,0755) || (getuid()==0 ? chown(WEB_DIR,uid,gid) : (0) ) || chdir(WEB_DIR) )
 				err(1,"creating %s dir",WEB_DIR);
@@ -625,7 +636,7 @@ main( int argc, char** argv )
 			}
 
 		/* Switch to the web (public) directory. */
-		if ( chdir( WEB_DIR ) < 0 )
+		if ( chdir(WEB_DIR) < 0 )
 			{
 			syslog( LOG_CRIT, WEB_DIR"-- chdir - %m" );
 			err(1,"Exiting because %s doesn't look friendly (forget -init ?) - chdir %s",cwd,WEB_DIR); 
@@ -736,6 +747,11 @@ main( int argc, char** argv )
 			syslog( LOG_CRIT, "setuid - %m" );
 			err(1,"setuid");
 			}
+		/* Setenv(HOME) (for gpgme) . */
+		if ( setenv("HOME",dir,1) < 0 ) {
+			syslog( LOG_CRIT, "setenv - %m" );
+			err(1,"setenv");
+		}
 		/* Check for unnecessary security exposure. */
 		if ( ! do_chroot )
 			syslog(
@@ -756,15 +772,15 @@ main( int argc, char** argv )
 	if ( gpgerr  != GPG_ERR_NO_ERROR )
 		errx(1,"gpgme library has been compiled  without OpenPGP support :-( (%d) ", gpgerr);
 
-	/* create first context */
+	/* create context */
 	gpgerr=gpgme_new(&gpgctx);
 	if ( gpgerr  != GPG_ERR_NO_ERROR )
 		errx(1,"can't create gpg context :-( (%d)", gpgerr);
 
-	gpgerr = gpgme_get_engine_info(&enginfo);
-	gpgerr = gpgme_ctx_set_engine_info(gpgctx, GPGME_PROTOCOL_OpenPGP, enginfo->file_name,"..");
+	/*gpgerr = gpgme_get_engine_info(&enginfo);
+	gpgerr = gpgme_ctx_set_engine_info(gpgctx, GPGME_PROTOCOL_OpenPGP, enginfo->file_name,"????");
 	if ( gpgerr  != GPG_ERR_NO_ERROR )
-		errx(1,"gpgme_ctx_set_engine_info :-( (%d)", gpgerr);
+		errx(1,"gpgme_ctx_set_engine_info :-( (%d)", gpgerr);*/
 
 	/* check for an expected secret key */
 	gpgerr = gpgme_op_keylist_start(gpgctx, "udbot", 1);
