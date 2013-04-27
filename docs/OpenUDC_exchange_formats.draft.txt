@@ -21,8 +21,9 @@ Request for Comments:                                      Open-UDC Team
  5. Data expected in the tree structure .............................
     5.1 Formats used for creation sheets
     5.2 Formats used for transactions
-    5.3 Propagation mechanism
-    5.4 MIME types (a priori deprecated)
+    5.3 Formats used for authentication
+    5.4 Formats used for rules
+    5.5 Formats encapsulation.
 
 1.== Introduction ==
 
@@ -113,11 +114,14 @@ http[s]://Node[:port]/...
 |       |   `-- 3.gpg
 |       `-- 5FDA8373344F3868D24D8ED280B1DF4F7FE6695D/
 |           `-- 1.gpg
-`-- udid2/
-    |-- geolist_FRA.txt.asc
-    |-- geolist_ITA.txt.asc
-    |(...)
-    `-- index.html
+|-- udid2/
+|   |-- geolist_FRA.txt.asc
+|   |-- geolist_ITA.txt.asc
+|   |(...)
+|   `-- index.html
+`-- rules/
+	|-- current.rules
+	`-- history
 
 5.== Data expected in the tree structure ==
 
@@ -126,6 +130,33 @@ http[s]://Node[:port]/...
   signed data.
 
 5.1= Formats used for creation sheets =
+5.3= Formats used for authentication =
+5.4= Formats used for rules =
+
+Rules are the paramerizable parts of an OpenUDC system. Such rules determine how MUST be interpreted OpenUDC inputs such as :
+
+	- minimal/maximal Universal Dividend amount
+	- new members acceptance
+	- rules modifications
+
+A rule file MUST be accepted (i.e. signed) by at least
+_RULES_MIN_VOTES_FOR_AMENDMENT_ to be considered as valid and replace
+current rule file.
+
+A rule file is a properties file which MUST match at least the three
+following keys :
+
+_RULES_MIN_VOTES_FOR_AMENDMENT_
+_RULES_MIN_VOUCH_FOR_NEW_MEMBER_
+_RULES_MIN_DIVIDEND_VALUE_
+
+Here is an example of a rules file :
+
+_RULES_MIN_VOTES_FOR_AMENDMENT_ = (2/3) TIMES Nt
+_RULES_MIN_VOUCH_FOR_NEW_MEMBER_ = (2/3) TIMES Nt
+_RULES_MIN_DIVIDEND_VALUE_ = 100
+
+5.5= Formats encapsulation =
 
   The "udc/create" url is used to POST the creation sheet with at
   least the minimum number of required signatures. Signatures MUST by
